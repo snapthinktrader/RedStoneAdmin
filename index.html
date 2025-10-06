@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crimson Control | Admin Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        crimson: {
+                            50: '#FFEBEE',
+                            100: '#FFCDD2',
+                            500: '#E53935',
+                            600: '#D32F2F',
+                            700: '#C62828',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .auth-bg {
+            background: radial-gradient(circle at 10% 20%, rgba(229, 57, 53, 0.1) 0%, rgba(255, 255, 255, 1) 90%);
+        }
+        .vanta-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Left Panel -->
+        <div class="w-full md:w-1/2 flex items-center justify-center p-8 auth-bg">
+            <div class="w-full max-w-md z-10">
+                <div class="flex justify-center mb-8">
+                    <div class="bg-crimson-500 p-3 rounded-lg shadow-lg">
+                        <i data-feather="shield" class="text-white w-10 h-10"></i>
+                    </div>
+                </div>
+                <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Crimson Control</h1>
+                <p class="text-gray-600 text-center mb-8">Secure Admin Portal</p>
+                
+                <form class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-feather="mail" class="text-gray-400"></i>
+                            </div>
+                            <input type="email" id="email" class="focus:ring-crimson-500 focus:border-crimson-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3" placeholder="admin@example.com">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-feather="lock" class="text-gray-400"></i>
+                            </div>
+                            <input type="password" id="password" class="focus:ring-crimson-500 focus:border-crimson-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3" placeholder="••••••••">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-crimson-500 hover:bg-crimson-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500 transition-colors">
+                            Sign In
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Right Panel (Visual) -->
+        <div class="hidden md:block w-1/2 relative bg-crimson-50">
+            <div class="vanta-bg" id="vanta-bg"></div>
+            <div class="absolute inset-0 flex items-center justify-center p-12 z-10">
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold text-crimson-600 mb-4">Financial Oversight</h2>
+                    <p class="text-lg text-gray-700">Redefined with precision control</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2FA Modal (Hidden by default) -->
+    <div class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="2faModal">
+        <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-800">Two-Factor Authentication</h3>
+                <button onclick="document.getElementById('2faModal').classList.add('hidden')">
+                    <i data-feather="x" class="text-gray-500"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Please enter the 6-digit code from your authenticator app</p>
+            <div class="flex space-x-4 mb-6">
+                <input type="text" maxlength="1" class="w-12 h-12 text-center border border-gray-300 rounded-md focus:ring-crimson-500 focus:border-crimson-500">
+                <input type="text" maxlength="1" class="w-12 h-12 text-center border border-gray-300 rounded-md focus:ring-crimson-500 focus:border-crimson-500">
+                <input type="text" maxlength="1" class="w-12 h-12 text-center border border-gray-300 rounded-md focus:ring-crimson-500 focus:border-crimson-500">
+                <input type="text" maxlength="1" class="w-12 h-12 text-center border border-gray-300 rounded-md focus:ring-crimson-500 focus:border-crimson-500">
+                <input type="text" maxlength="1" class="w-12 h-12 text-center border border-gray-300 rounded-md focus:ring-crimson-500 focus:border-crimson-500">
+                <input type="text" maxlength="1" class="w-12 h-12 text-center border border-gray-300 rounded-md focus:ring-crimson-500 focus:border-crimson-500">
+            </div>
+            <button class="w-full py-3 px-4 bg-crimson-500 text-white rounded-md hover:bg-crimson-600 transition-colors">
+                Verify & Continue
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script>
+        // Initialize Vanta.js background
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xe53935,
+            backgroundColor: 0xf5f5f5,
+            points: 12.00,
+            maxDistance: 22.00,
+            spacing: 18.00
+        });
+
+        // Show 2FA modal on form submit (demo)
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('2faModal').classList.remove('hidden');
+        });
+
+        // Auto focus next 2FA input
+        const inputs = document.querySelectorAll('#2faModal input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Initialize feather icons
+        feather.replace();
+    </script>
+</body>
+</html>
