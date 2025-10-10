@@ -7,6 +7,7 @@ import UserManagement from './components/UserManagement';
 import WithdrawalManagement from './components/WithdrawalManagement';
 import Transactions from './components/Transactions';
 import Settings from './components/Settings';
+import AdminSettings from './components/AdminSettings';
 import Layout from './components/Layout';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
             <Route path="withdrawals" element={<WithdrawalManagement />} />
             <Route path="transactions" element={<Transactions />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="admin-settings" element={<AdminSettings />} />
           </Route>
         </Routes>
       </div>
