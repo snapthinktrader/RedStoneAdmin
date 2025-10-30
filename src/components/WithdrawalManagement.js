@@ -18,10 +18,10 @@ const WithdrawalManagement = () => {
       // Transform backend data to match component expectations
       const transformedWithdrawals = (data || []).map(withdrawal => ({
         id: `#WD${withdrawal._id.slice(-5)}`,
-        userId: `#${withdrawal.userId?._id?.slice(-5) || 'Unknown'}`,
+        userId: withdrawal.userId?._id ? `#${withdrawal.userId._id.slice(-5)}` : (withdrawal.userId ? `#${withdrawal.userId.slice(-5)}` : 'Unknown'),
         currentBalance: withdrawal.userId?.walletBalance ? `$${withdrawal.userId.walletBalance.toFixed(2)}` : '$0.00',
         requestedAmount: `$${withdrawal.amount.toFixed(2)}`,
-        withdrawalAddress: withdrawal.walletAddress || 'Not specified',
+        withdrawalAddress: withdrawal.toAddress || withdrawal.walletAddress || 'Not specified',
         requestDate: new Date(withdrawal.createdAt).toLocaleDateString('en-US', {
           day: '2-digit',
           month: 'short',

@@ -107,8 +107,8 @@ class ApiService {
 
   // Withdrawals Management - Filter transactions by type
   async getAllWithdrawals() {
-    const transactions = await this.getAllTransactions();
-    return transactions.filter(tx => tx.type === 'WITHDRAWAL');
+    const response = await this.makeRequest('/admin/payment/withdrawals');
+    return response.data?.withdrawals || [];
   }
 
   async updateTransactionStatus(transactionId, status) {
