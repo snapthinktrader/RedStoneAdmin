@@ -60,26 +60,32 @@ const WithdrawalManagement = () => {
   const confirmApproval = async () => {
     try {
       if (selectedWithdrawal && selectedWithdrawal._id) {
-        await ApiService.updateTransactionStatus(selectedWithdrawal._id, 'COMPLETED');
+        const adminNotes = document.getElementById('approvalNotes')?.value || '';
+        await ApiService.approveWithdrawal(selectedWithdrawal._id, adminNotes);
+        alert('Withdrawal approved and executed successfully!');
         await fetchWithdrawals(); // Refresh the list
         setShowApproveModal(false);
         setSelectedWithdrawal(null);
       }
     } catch (error) {
       console.error('Error approving withdrawal:', error);
+      alert(`Failed to approve withdrawal: ${error.message}`);
     }
   };
 
   const confirmDecline = async () => {
     try {
       if (selectedWithdrawal && selectedWithdrawal._id) {
-        await ApiService.updateTransactionStatus(selectedWithdrawal._id, 'FAILED');
+        const adminNotes = document.getElementById('rejectNotes')?.value || '';
+        await ApiService.rejectWithdrawal(selectedWithdrawal._id, adminNotes);
+        alert('Withdrawal rejected successfully!');
         await fetchWithdrawals(); // Refresh the list
         setShowDeclineModal(false);
         setSelectedWithdrawal(null);
       }
     } catch (error) {
-      console.error('Error declining withdrawal:', error);
+      console.error('Error rejecting withdrawal:', error);
+      alert(`Failed to reject withdrawal: ${error.message}`);
     }
   };
 
@@ -243,11 +249,22 @@ const WithdrawalManagement = () => {
                 <X className="text-gray-500 w-6 h-6" />
               </button>
             </div>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-4">
               Are you sure you want to approve this withdrawal of{' '}
               <span className="font-bold">{selectedWithdrawal.requestedAmount}</span> to address{' '}
-              <span className="font-mono">{selectedWithdrawal.withdrawalAddress}</span>?
+              <span className="font-mono text-xs">{selectedWithdrawal.withdrawalAddress}</span>?
             </p>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Admin Notes (Optional)
+              </label>
+              <textarea
+                id="approvalNotes"
+                rows="3"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-green-500 focus:border-green-500"
+                placeholder="Add any notes about this approval..."
+              />
+            </div>
             <div className="flex space-x-4">
               <button 
                 onClick={() => setShowApproveModal(false)}
@@ -289,8 +306,10 @@ const WithdrawalManagement = () => {
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes (Optional)</label>
               <textarea 
+                id="rejectNotes"
                 rows="3" 
                 className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border border-gray-300 rounded-md"
+                placeholder="Provide reason for rejection..."
               ></textarea>
             </div>
             <div className="flex space-x-4">

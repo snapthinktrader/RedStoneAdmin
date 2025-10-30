@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://red-stone-backend.vercel.app/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://redstonebackend.onrender.com/api';
 
 class ApiService {
   constructor() {
@@ -39,14 +39,26 @@ class ApiService {
 
   // Admin Authentication
   async adminLogin(credentials) {
-    // For now, we'll use a mock admin login since we don't have admin endpoints
-    // In production, you should create proper admin authentication endpoints
-    if (credentials.username === 'admin' && credentials.password === 'admin') {
-      const mockToken = 'admin-mock-token-' + Date.now();
-      this.setAuthToken(mockToken);
-      return { success: true, token: mockToken };
+    const response = await fetch(`${API_BASE_URL}/auth/admin/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Login failed');
     }
-    throw new Error('Invalid credentials');
+
+    if (data.success && data.token) {
+      this.setAuthToken(data.token);
+      return data;
+    }
+
+    throw new Error('Invalid response from server');
   }
 
   // Dashboard Statistics - ONLY REAL DATA
@@ -73,6 +85,20 @@ class ApiService {
     });
   }
 
+  async addManualCredit(userId, amount, reason, description) {
+    return await this.makeRequest(`/admin/users/${userId}/credit`, {
+      method: 'POST',
+      body: JSON.stringify({ amount, reason, description })
+    });
+  }
+
+  async addAdminDeposit(userId, amount, description) {
+    return await this.makeRequest(`/admin/users/${userId}/deposit`, {
+      method: 'POST',
+      body: JSON.stringify({ amount, description })
+    });
+  }
+
   // Transactions Management - ONLY REAL DATA
   async getAllTransactions() {
     const response = await this.makeRequest('/admin/transactions');
@@ -90,6 +116,26 @@ class ApiService {
       method: 'PATCH',
       body: JSON.stringify({ status })
     });
+  }
+
+  // Withdrawal Management
+  async approveWithdrawal(withdrawalId, adminNotes = '') {
+    return await this.makeRequest(`/admin/payment/withdrawals/${withdrawalId}/approve`, {
+      method: 'POST',
+      body: JSON.stringify({ adminNotes })
+    });
+  }
+
+  async rejectWithdrawal(withdrawalId, adminNotes = '') {
+    return await this.makeRequest(`/admin/payment/withdrawals/${withdrawalId}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ adminNotes })
+    });
+  }
+
+  async getPendingWithdrawals() {
+    const response = await this.makeRequest('/admin/payment/withdrawals/pending');
+    return response.data?.withdrawals || [];
   }
 
   async getTransactionById(transactionId) {
