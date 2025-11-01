@@ -119,10 +119,15 @@ class ApiService {
   }
 
   // Withdrawal Management
-  async approveWithdrawal(withdrawalId, adminNotes = '') {
+  async approveWithdrawal(withdrawalId, approvalData) {
+    // Support both old format (string) and new format (object)
+    const body = typeof approvalData === 'string' 
+      ? { adminNotes: approvalData }
+      : approvalData;
+      
     return await this.makeRequest(`/admin/payment/withdrawals/${withdrawalId}/approve`, {
       method: 'POST',
-      body: JSON.stringify({ adminNotes })
+      body: JSON.stringify(body)
     });
   }
 
@@ -136,6 +141,16 @@ class ApiService {
   async getPendingWithdrawals() {
     const response = await this.makeRequest('/admin/payment/withdrawals/pending');
     return response.data?.withdrawals || [];
+  }
+
+  async getWithdrawalDetails(withdrawalId) {
+    const response = await this.makeRequest(`/admin/payment/withdrawals/${withdrawalId}/details`);
+    return response.data || response;
+  }
+
+  async getAdminWalletInfo() {
+    const response = await this.makeRequest('/admin/wallet/info');
+    return response.data || response;
   }
 
   async getTransactionById(transactionId) {
