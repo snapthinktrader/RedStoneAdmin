@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, DollarSign, CreditCard, Settings, LogOut, ChevronLeft, ChevronRight, Shield } from 'lucide-react';
+import { Home, Users, DollarSign, CreditCard, Settings, LogOut, ChevronLeft, ChevronRight, Package } from 'lucide-react';
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
   const location = useLocation();
@@ -10,8 +10,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     { path: '/admin/users', icon: Users, label: 'User Management' },
     { path: '/admin/transactions', icon: DollarSign, label: 'Transactions' },
     { path: '/admin/withdrawals', icon: CreditCard, label: 'Withdrawals' },
+    { path: '/admin/apk-management', icon: Package, label: 'APK Management' },
     { path: '/admin/settings', icon: Settings, label: 'Settings' },
-    { path: '/admin/admin-settings', icon: Shield, label: 'Admin Settings' },
   ];
 
   const isActive = (path) => location.pathname === path;

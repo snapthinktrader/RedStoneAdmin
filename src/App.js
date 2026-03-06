@@ -7,6 +7,7 @@ import UserManagement from './components/UserManagement';
 import WithdrawalManagement from './components/WithdrawalManagement';
 import Transactions from './components/Transactions';
 import Settings from './components/Settings';
+import AppVersionManagement from './components/AppVersionManagement';
 import Layout from './components/Layout';
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
             <Route path="users" element={<UserManagement />} />
             <Route path="withdrawals" element={<WithdrawalManagement />} />
             <Route path="transactions" element={<Transactions />} />
+            <Route path="apk-management" element={<AppVersionManagement />} />
             <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
