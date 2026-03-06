@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
+import ApiService from '../services/api';
 
 const Login = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     
-    // Check credentials and login directly without 2FA
-    if (username === 'admin' && password === 'admin') {
-      setIsAuthenticated(true);
-      navigate('/admin/dashboard');
-    } else {
-      setError('Invalid username or password. Use "admin" for both username and password.');
+    try {
+      // Call backend API for authentication
+      const response = await ApiService.adminLogin({
+        username,
+        password
+      });
+
+      if (response.success && response.token) {
+        // Store token in localStorage
+        localStorage.setItem('admin_token', response.token);
+        setIsAuthenticated(true);
+        navigate('/admin/dashboard');
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.message || 'Invalid username or password');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +81,7 @@ const Login = ({ setIsAuthenticated }) => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="focus:ring-red-500 focus:border-red-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3" 
-                  placeholder="admin"
+                  placeholder="Enter your username"
                   required
                 />
               </div>
@@ -82,7 +99,7 @@ const Login = ({ setIsAuthenticated }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="focus:ring-red-500 focus:border-red-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3" 
-                  placeholder="admin"
+                  placeholder="Enter your password"
                   required
                 />
               </div>
@@ -91,15 +108,16 @@ const Login = ({ setIsAuthenticated }) => {
             <div>
               <button 
                 type="submit" 
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                disabled={loading}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                Sign In
+                {loading ? 'Signing In...' : 'Sign In'}
               </button>
             </div>
             
             <div className="text-center">
               <p className="text-sm text-gray-500">
-                Default credentials: <span className="font-mono bg-gray-100 px-2 py-1 rounded">admin / admin</span>
+                Use your admin credentials to login
               </p>
             </div>
           </form>

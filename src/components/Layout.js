@@ -3,14 +3,15 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 
-const Layout = () => {
+const Layout = ({ onLogout }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar 
         collapsed={sidebarCollapsed} 
-        setCollapsed={setSidebarCollapsed} 
+        setCollapsed={setSidebarCollapsed}
+        onLogout={onLogout}
       />
       <div className="flex-1 overflow-auto">
         <Header />

@@ -3,7 +3,7 @@
  * Uploads large files in chunks to avoid serverless timeout
  */
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL;
+const API_BASE = process.env.REACT_APP_API_BASE_URL || 'https://redstonebackend.onrender.com/api';
 const CHUNK_SIZE = 1 * 1024 * 1024; // 1MB chunks
 
 /**

@@ -1,9 +1,17 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Users, DollarSign, CreditCard, Settings, LogOut, ChevronLeft, ChevronRight, Package } from 'lucide-react';
 
-const Sidebar = ({ collapsed, setCollapsed }) => {
+const Sidebar = ({ collapsed, setCollapsed, onLogout }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+      navigate('/login');
+    }
+  };
 
   const menuItems = [
     { path: '/admin/dashboard', icon: Home, label: 'Dashboard' },
@@ -72,7 +80,10 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       </nav>
       
       <div className="p-4 border-t">
-        <div className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 cursor-pointer">
+        <div 
+          onClick={handleLogout}
+          className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+        >
           <LogOut className="w-5 h-5" />
           {!collapsed && <span className="sidebar-text">Logout</span>}
         </div>

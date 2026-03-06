@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Upload, Trash2, Edit2, CheckCircle, XCircle, Plus } from 'lucide-react';
 import { uploadFileInChunks } from '../utils/chunkedUpload';
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL;
+const API_BASE = process.env.REACT_APP_API_BASE_URL || 'https://redstonebackend.onrender.com/api';
+
+// Debug log
+if (!process.env.REACT_APP_API_BASE_URL) {
+  console.warn('REACT_APP_API_BASE_URL not set, using fallback:', API_BASE);
+}
 
 const AppVersionManagement = () => {
   const [versions, setVersions] = useState([]);

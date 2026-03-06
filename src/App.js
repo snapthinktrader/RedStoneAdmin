@@ -73,7 +73,7 @@ function App() {
             <Route path="withdrawals" element={<WithdrawalManagement />} />
             <Route path="transactions" element={<Transactions />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="app-versions" element={<AppVersionManagement />} />
+            <Route path="apk-management" element={<AppVersionManagement />} />
             <Route path="admin-settings" element={<AdminSettings />} />
           </Route>
         </Routes>
