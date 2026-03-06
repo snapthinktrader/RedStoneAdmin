@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.sidebar {
+  transition: all 0.3s;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar.collapsed .sidebar-text {
+  display: none;
+}
+
+.sidebar.collapsed .logo-text {
+  display: none;
+}
+
+.auth-bg {
+  background: radial-gradient(circle at 10% 20%, rgba(229, 57, 53, 0.1) 0%, rgba(255, 255, 255, 1) 90%);
+}
