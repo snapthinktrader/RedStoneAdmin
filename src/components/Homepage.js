@@ -1,8 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Download, Lock, TrendingUp, Users, Shield, Smartphone, Mail } from 'lucide-react';
 
 const Homepage = () => {
+  const [latestApk, setLatestApk] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchLatestApk();
+  }, []);
+
+  const fetchLatestApk = async () => {
+    try {
+      const API_BASE = process.env.REACT_APP_API_BASE_URL || 'https://redstonebackend.onrender.com/api';
+      const response = await fetch(`${API_BASE}/apk-management/versions`);
+      const data = await response.json();
+      
+      if (data.success && data.data && data.data.length > 0) {
+        // Find the latest active Android APK
+        const activeApks = data.data.filter(v => v.isActive && v.platform === 'android');
+        if (activeApks.length > 0) {
+          // Sort by version code descending
+          activeApks.sort((a, b) => b.versionCode - a.versionCode);
+          setLatestApk(activeApks[0]);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching latest APK:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = () => {
+    if (latestApk && latestApk.downloadUrl) {
+      window.location.href = latestApk.downloadUrl;
+    }
+  };
+
   const features = [
     {
       icon: TrendingUp,
@@ -79,9 +114,14 @@ const Homepage = () => {
                 RedStone offers daily compounding returns and powerful referral rewards - all in one intuitive mobile app.
               </p>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <a href="#download" className="px-6 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition duration-300 flex items-center justify-center hover:shadow-lg hover:shadow-red-600/30">
-                  <Download className="mr-2 w-5 h-5" /> Android APK
-                </a>
+                <button 
+                  onClick={handleDownload}
+                  disabled={loading || !latestApk}
+                  className="px-6 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition duration-300 flex items-center justify-center hover:shadow-lg hover:shadow-red-600/30 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  <Download className="mr-2 w-5 h-5" /> 
+                  {loading ? 'Loading...' : latestApk ? `Download v${latestApk.version}` : 'Android APK'}
+                </button>
                 <a href="#download" className="px-6 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition duration-300 flex items-center justify-center hover:shadow-lg hover:shadow-red-600/30">
                   <Download className="mr-2 w-5 h-5" /> iOS App Store
                 </a>
@@ -162,13 +202,23 @@ const Homepage = () => {
           <h2 className="text-3xl font-bold text-red-600 mb-4">Ready to Start Earning?</h2>
           <p className="text-xl text-gray-600 mb-8">Download the RedStone app now for Android and iOS.</p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <button className="px-6 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition duration-300 flex items-center justify-center hover:shadow-lg hover:shadow-red-600/30">
-              <Download className="mr-2 w-5 h-5" /> Android APK
+            <button 
+              onClick={handleDownload}
+              disabled={loading || !latestApk}
+              className="px-6 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition duration-300 flex items-center justify-center hover:shadow-lg hover:shadow-red-600/30 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              <Download className="mr-2 w-5 h-5" /> 
+              {loading ? 'Loading...' : latestApk ? `Download v${latestApk.version} (${latestApk.fileSize})` : 'Android APK'}
             </button>
-            <button className="px-6 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition duration-300 flex items-center justify-center hover:shadow-lg hover:shadow-red-600/30">
-              <Download className="mr-2 w-5 h-5" /> iOS App Store
+            <button className="px-6 py-3 bg-gray-400 text-white rounded-md font-medium cursor-not-allowed flex items-center justify-center">
+              <Download className="mr-2 w-5 h-5" /> iOS (Coming Soon)
             </button>
           </div>
+          {latestApk && (
+            <div className="mt-4 text-sm text-gray-600">
+              <p>Latest version: {latestApk.version} • Released: {new Date(latestApk.uploadedAt).toLocaleDateString()}</p>
+            </div>
+          )}
           <div className="mt-8 flex flex-col items-center">
             <p className="text-gray-600 mb-2">Or scan QR code</p>
             <div className="bg-white p-4 rounded-md shadow-md">
