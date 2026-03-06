@@ -7,8 +7,8 @@ const UserManagement = () => {
   const [showUserModal, setShowUserModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [searchTerm] = useState('');
+  const [filterStatus] = useState('all');
 
   // Fetch users from backend
   const fetchUsers = async () => {
