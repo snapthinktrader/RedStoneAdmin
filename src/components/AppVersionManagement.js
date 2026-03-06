@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Download, Trash2, Edit2, CheckCircle, XCircle, Plus } from 'lucide-react';
+import { Upload, Trash2, Edit2, CheckCircle, XCircle, Plus } from 'lucide-react';
 import { uploadFileInChunks } from '../utils/chunkedUpload';
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL || 'https://redstonebackend.onrender.com/api';
+const API_BASE = 'https://red-stone-backend.vercel.app/api';
 
 const AppVersionManagement = () => {
   const [versions, setVersions] = useState([]);
@@ -81,6 +81,8 @@ const AppVersionManagement = () => {
     }
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -101,14 +103,15 @@ const AppVersionManagement = () => {
           console.log(`📊 Upload progress callback: ${progress}%`);
           setUploadProgress(progress);
         });
-
+        
         console.log('Upload successful:', result);
-
+        
         // Extract file info from upload result
         downloadUrl = result.downloadUrl;
         fileId = result.fileId;
         filename = result.filename;
         fileSize = result.fileSize;
+        
       } catch (error) {
         console.error('Error uploading file:', error);
         alert(`Failed to upload file: ${error.message}`);
@@ -161,7 +164,7 @@ const AppVersionManagement = () => {
       });
 
       const data = await response.json();
-
+      
       if (data.success) {
         alert(selectedVersion ? 'Version updated successfully!' : 'Version created successfully!');
         setShowAddModal(false);
@@ -188,7 +191,7 @@ const AppVersionManagement = () => {
       });
 
       const data = await response.json();
-
+      
       if (data.success) {
         alert('Version and APK file deleted successfully!');
         fetchVersions();
@@ -310,52 +313,54 @@ const AppVersionManagement = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {versions && versions.length > 0 ? (
                 versions.map((version) => (
-                  <tr key={version._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">v{version.version}</div>
-                      <div className="text-sm text-gray-500">Code: {version.versionCode}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        version.platform === 'android' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
-                        {version.platform.toUpperCase()}
+                <tr key={version._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">v{version.version}</div>
+                    <div className="text-sm text-gray-500">Code: {version.versionCode}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      version.platform === 'android' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {version.platform.toUpperCase()}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{version.fileSize}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {version.downloadCount.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {version.isActive ? (
+                      <span className="flex items-center text-green-600">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Active
                       </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{version.fileSize}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{version.downloadCount.toLocaleString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {version.isActive ? (
-                        <span className="flex items-center text-green-600">
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          Active
-                        </span>
-                      ) : (
-                        <span className="flex items-center text-gray-400">
-                          <XCircle className="w-4 h-4 mr-1" />
-                          Inactive
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(version.uploadedAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <button
-                        onClick={() => handleEdit(version)}
-                        className="text-blue-600 hover:text-blue-900"
-                      >
-                        <Edit2 className="w-4 h-4 inline" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(version._id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        <Trash2 className="w-4 h-4 inline" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                    ) : (
+                      <span className="flex items-center text-gray-400">
+                        <XCircle className="w-4 h-4 mr-1" />
+                        Inactive
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(version.uploadedAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                    <button
+                      onClick={() => handleEdit(version)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
+                      <Edit2 className="w-4 h-4 inline" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(version._id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      <Trash2 className="w-4 h-4 inline" />
+                    </button>
+                  </td>
+                </tr>
+              ))
               ) : (
                 <tr>
                   <td colSpan="7" className="px-6 py-12 text-center">
@@ -393,6 +398,7 @@ const AppVersionManagement = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                     />
                   </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Version Code</label>
                     <input
@@ -418,6 +424,7 @@ const AppVersionManagement = () => {
                       <option value="ios">iOS</option>
                     </select>
                   </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">File Size</label>
                     <input
@@ -460,13 +467,17 @@ const AppVersionManagement = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Upload Progress Bar */}
+                  
+                  {/* Upload Progress Bar - Always visible when uploading */}
                   {uploadingFile && (
                     <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-300 rounded-lg shadow-md">
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-semibold text-blue-900">📦 Uploading {selectedFile?.name}</span>
-                        <span className="text-lg font-bold text-blue-600">{uploadProgress}%</span>
+                        <span className="text-sm font-semibold text-blue-900">
+                          📦 Uploading {selectedFile?.name}
+                        </span>
+                        <span className="text-lg font-bold text-blue-600">
+                          {uploadProgress}%
+                        </span>
                       </div>
                       <div className="bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
                         <div 
@@ -478,7 +489,11 @@ const AppVersionManagement = () => {
                       </div>
                       <div className="flex items-center justify-between mt-3">
                         <p className="text-xs font-medium text-blue-700">
-                          {uploadProgress < 100 ? '🔄 Uploading chunks... Please wait' : '✨ Finalizing upload...'}
+                          {uploadProgress < 100 ? (
+                            <>🔄 Uploading chunks... Please wait</>
+                          ) : (
+                            <>✨ Finalizing upload...</>
+                          )}
                         </p>
                         <p className="text-xs text-gray-600 font-medium">
                           {selectedFile ? `${(selectedFile.size / 1024 / 1024).toFixed(2)} MB` : ''}
@@ -486,7 +501,7 @@ const AppVersionManagement = () => {
                       </div>
                     </div>
                   )}
-
+                  
                   <p className="text-xs text-gray-500 mt-2">
                     Upload your APK/IPA file directly, or provide a download URL below
                   </p>
