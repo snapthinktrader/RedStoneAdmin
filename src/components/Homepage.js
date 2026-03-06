@@ -33,8 +33,11 @@ const Homepage = () => {
   };
 
   const handleDownload = () => {
-    if (latestApk && latestApk.downloadUrl) {
-      window.location.href = latestApk.downloadUrl;
+    if (latestApk && latestApk.fileId) {
+      // Construct download URL using current backend
+      const API_BASE = process.env.REACT_APP_API_BASE_URL || 'https://redstonebackend.onrender.com/api';
+      const downloadUrl = `${API_BASE}/download/apk/${latestApk.fileId}`;
+      window.location.href = downloadUrl;
     }
   };
 
